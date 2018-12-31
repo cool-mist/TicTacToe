@@ -1,5 +1,6 @@
-package me.ayrus.ttt.core.impl;
+package me.ayrus.ttt.core.player.impl;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -7,18 +8,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IMark;
-import me.ayrus.ttt.core.IPlayer;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
+import me.ayrus.ttt.core.mark.IMark;
+import me.ayrus.ttt.core.player.IPlayer;
 
-class Player implements IPlayer{
+class RandomAI implements IPlayer{
 
     private final IMark  m_mark;
-    private final IBoard m_board;
+    private       IBoard m_board;
     
-    Player(IMark mark, IBoard board) {
+    RandomAI(IMark mark) {
         m_mark  = mark;
+    }
+    
+    @Override
+    public void setBoard(IBoard board) {
         m_board = board;
     }
     
@@ -29,19 +34,30 @@ class Player implements IPlayer{
 
     @Override
     public IPos nextMove() {
-        Map<IPos, ISquare> state          = m_board.getSquares();
-        List<IPos>         emptyPositions = state.entrySet().stream()
-                                                      .filter(this::isNotEmpty)
-                                                      .map(Entry::getKey)
-                                                      .collect(toList());
+        IBoard             board          = getBoard();
+        Map<IPos, ISquare> state          = board.getSquares();
+        List<IPos>         emptyPositions = calculateEmptyPositions(state);
         
-        if(emptyPositions.isEmpty()) {
+        if(emptyPositions.isEmpty())
             throw new IllegalStateException("No move to make");
-        }
+        
         int randIndex = getRandNumberWithin(emptyPositions.size());
         return emptyPositions.get(randIndex);
     }
     
+    private List<IPos> calculateEmptyPositions(Map<IPos, ISquare> state) {
+        return state.entrySet()
+                .stream()
+                .filter(this::isNotEmpty)
+                .map(Entry::getKey)
+                .collect(toList());
+    }
+
+    private IBoard getBoard() {
+        requireNonNull(m_board, "Set the board for this player with setBoard() before moving");
+        return m_board;
+    }
+
     private int getRandNumberWithin(int size) { 
         // 0(inc) to size(exc)
         return (int) Math.floor(Math.random() * size);

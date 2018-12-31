@@ -1,6 +1,6 @@
-package me.ayrus.ttt.core.impl;
+package me.ayrus.ttt.core.mark.impl;
 
-import me.ayrus.ttt.core.IMark;
+import me.ayrus.ttt.core.mark.IMark;
 
 class Mark implements IMark{
     private final String m_symbol;

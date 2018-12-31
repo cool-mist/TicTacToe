@@ -1,10 +1,11 @@
-package me.ayrus.ttt.core.impl;
+package me.ayrus.ttt.core.mark.impl;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import me.ayrus.ttt.core.IMark;
+import me.ayrus.ttt.core.mark.IMark;
+import me.ayrus.ttt.core.mark.impl.Mark;
 
 public class MarkTest {
     

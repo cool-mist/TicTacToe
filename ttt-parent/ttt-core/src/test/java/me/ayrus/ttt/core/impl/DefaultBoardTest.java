@@ -10,14 +10,14 @@ import java.util.Set;
 import org.junit.Test;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IMark;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
+import me.ayrus.ttt.core.mark.IMark;
 
-public class BoardTest {
+public class DefaultBoardTest {
 
     protected IBoard createNewBoard() {
-        return new Board();
+        return new DefaultBoard();
     }
 
     @Test
@@ -58,6 +58,16 @@ public class BoardTest {
         initialState.forEach((pos, square) -> {
             checkEmptySquare(square, pos);
         });
+    }
+    
+    @Test
+    public void testFind() {
+        IBoard board   = createNewBoard();
+        ISquare square = board.find(0, 1);
+        IPos    pos    = square.getPos();
+        
+        assertEquals(0, pos.getRow());
+        assertEquals(1, pos.getColumn());
     }
 
     private void removePosition(int i, int j, Set<IPos> initialPositions) {
