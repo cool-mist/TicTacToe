@@ -34,6 +34,7 @@ public class Game implements IGame{
         m_board             = m_factory.createNewBoard();
         m_unmodifiableBoard = m_factory.createUnmodifiableBoard(m_board);
         m_gamePolicy        = gamePolicy;
+        m_gameResult        = m_gamePolicy.calculate(m_board);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class Game implements IGame{
         return m_gameResult;
     }
 
-    private ISquare makeMove() {
+    private ISquare makeMove() { //TODO: Handle exceptions if player performs an illegal move
         IPlayer currentPlayer = m_players.get(m_nextPlayerIndex);
         IPos    pos           = currentPlayer.nextMove();
         ISquare square        = m_board.getSquares().get(pos);
