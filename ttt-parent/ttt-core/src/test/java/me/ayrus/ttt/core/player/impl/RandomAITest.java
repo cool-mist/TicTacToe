@@ -2,7 +2,6 @@ package me.ayrus.ttt.core.player.impl;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,69 +11,51 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IBoardFactory;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
-import me.ayrus.ttt.core.impl.BoardFactory;
+import me.ayrus.ttt.core.impl.Boards;
+import me.ayrus.ttt.core.impl.DefaultBoard;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 import me.ayrus.ttt.core.player.IPlayer;
 
 public class RandomAITest {
 
-    IMarkFactory  markFactory  = new MarkFactory();
-    IBoardFactory boardFactory = new BoardFactory();
-
-    @Test
-    public void testGetMark() {
-        IMark   mark   = markFactory.create("K");
-        IPlayer player = new RandomAI(mark);
-
-        assertEquals(mark, player.getMark());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNextMove_WithoutBoard() {
-        IPlayer player = createRandomAI();
-        player.nextMove();
-    }
-
     @Test
     public void testNextMove_isEmpty() {
         IPlayer player = createRandomAI();
-        IBoard  board  = boardFactory.createNewBoard();
+        IBoard  board  = new DefaultBoard();
 
-        player.setBoard(boardFactory.createUnmodifiableBoard(board));
+        player.setBoard(Boards.createUnmodifiableBoard(board, DefaultBoard::new));
         
         List<IPos> boardState       = board.getSquares().entrySet().stream().map(Entry::getValue).map(ISquare::getPos).collect(toList());
         List<IPos> illegalPositions = new ArrayList<>();
         
         checkNextMoves(player, 1000, illegalPositions);
         
-        makeMove(board, boardState, illegalPositions, markFactory.O(), 0, 0);
+        makeMove(board, boardState, illegalPositions,Marks.O, 0, 0);
         checkNextMoves(player, 1000, illegalPositions);
         
-        makeMove(board, boardState, illegalPositions, markFactory.X(), 0, 1);
+        makeMove(board, boardState, illegalPositions, Marks.X, 0, 1);
         checkNextMoves(player, 1000, illegalPositions);
         
-        makeMove(board, boardState, illegalPositions, markFactory.O(), 0, 2);
+        makeMove(board, boardState, illegalPositions, Marks.O, 0, 2);
         checkNextMoves(player, 1000, illegalPositions);
         
-        makeMove(board, boardState, illegalPositions, markFactory.X(), 1, 0);
+        makeMove(board, boardState, illegalPositions, Marks.X, 1, 0);
         checkNextMoves(player, 1000, illegalPositions);
     }
     
     @Test(expected = IllegalStateException.class)
     public void testNextMove_NoMoreMoves() {
         IPlayer player = createRandomAI();
-        IBoard  board  = boardFactory.createNewBoard();
+        IBoard  board  = new DefaultBoard();
         List<ISquare> boardState = board.getSquares().entrySet().stream().map(Entry::getValue).collect(toList());
         
-        player.setBoard(boardFactory.createUnmodifiableBoard(board));
+        player.setBoard(Boards.createUnmodifiableBoard(board, DefaultBoard::new));
         
         for(ISquare square : boardState)
-            square.setMark(markFactory.O());
+            square.setMark(Marks.O);
         
         player.nextMove();
     }
@@ -112,7 +93,7 @@ public class RandomAITest {
     }
 
     private IPlayer createRandomAI() {
-        return new RandomAI(markFactory.O());
+        return new RandomAI(Marks.O);
     }
 
 }

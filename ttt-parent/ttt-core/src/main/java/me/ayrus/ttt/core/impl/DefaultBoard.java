@@ -7,15 +7,15 @@ import me.ayrus.ttt.core.IBoard;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 
-class DefaultBoard implements IBoard{
+public class DefaultBoard implements IBoard{
     
     private static final int ROWS = 3;
     private static final int COLS = 3;
 
-    Map<IPos, ISquare>  m_squares;
+    Map<IPos, ISquare>                  m_squares;
     Map<Integer, Map<Integer, ISquare>> m_indexedSquares;
     
-    DefaultBoard() {
+    public DefaultBoard() {
         initSquares();
     }
     
@@ -49,7 +49,10 @@ class DefaultBoard implements IBoard{
         if(outOfLimits(row, ROWS) || outOfLimits(col, COLS))
             throw new IllegalArgumentException(String.format("Invalid indices %d:%d", row, col));
         
-        return m_indexedSquares.get(row).get(col);
+        ISquare square = m_indexedSquares.get(row).get(col);
+        IPos    pos    = square.getPos();
+        
+        return m_squares.get(pos);
     }
 
     private boolean outOfLimits(int index, int max) {

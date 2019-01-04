@@ -7,12 +7,9 @@ import org.junit.Test;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class SquareTest {
-    
-    IMarkFactory factory = new MarkFactory();
     
     @Test
     public void testGetPos() {
@@ -26,14 +23,13 @@ public class SquareTest {
     public void testEmptySquare() {
         ISquare square = new Square(new Pos(0, 0));
         
-        assertEquals("$", square.getMark().getSymbol());
-        assertEquals( 0 , square.getMark().getId());
+        assertEquals(Marks.E, square.getMark());
     }
     
     @Test
     public void testOccupy() {
         ISquare square = new Square(new Pos(0, 0));
-        IMark   xMark  = factory.create("X");
+        IMark   xMark  = Marks.X;
         
         square.setMark(xMark);
         
@@ -43,7 +39,7 @@ public class SquareTest {
     @Test(expected = IllegalStateException.class)
     public void testAlreadyOccupied() {
         ISquare square = new Square(new Pos(0, 0));
-        IMark   xMark  = factory.create("X");
+        IMark   xMark  = Marks.X;
         
         square.setMark(xMark);
         square.setMark(null);

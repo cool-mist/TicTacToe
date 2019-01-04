@@ -7,88 +7,92 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IBoardFactory;
 import me.ayrus.ttt.core.game.IGamePolicy;
 import me.ayrus.ttt.core.game.IGameResult;
-import me.ayrus.ttt.core.impl.BoardFactory;
+import me.ayrus.ttt.core.impl.DefaultBoard;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class DefaultGamePolicyTest {
     
-    IGamePolicy   policy  = new DefaultGamePolicy();
-    IBoardFactory factory = new BoardFactory();
-    IMarkFactory  marks   = new MarkFactory();
+    IGamePolicy policy = new DefaultGamePolicy();
+    
+    @Test
+    public void testNewBoard() {
+        IBoard      board  = new DefaultBoard();
+        IGameResult result = policy.calculate(board);
+        
+        assertFalse(result.isGameOver());
+    }
     
     @Test
     public void testRowVictory() {
-        IBoard board = factory.createNewBoard();
-        set(0, 0, marks.X(), board);
-        set(0, 1, marks.X(), board);
-        set(0, 2, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 1, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 0, Marks.X, board);
+        set(0, 1, Marks.X, board);
+        set(0, 2, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 1, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         
         assertTrue  (result.isGameOver());
-        assertEquals(marks.X(), result.getWinner());
+        assertEquals(Marks.X, result.getWinner());
     }
     
     @Test
     public void testColumnVictory() {
-        IBoard board = factory.createNewBoard();
-        set(0, 1, marks.X(), board);
-        set(1, 1, marks.X(), board);
-        set(2, 1, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 2, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 1, Marks.X, board);
+        set(1, 1, Marks.X, board);
+        set(2, 1, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 2, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         
         assertTrue  (result.isGameOver());
-        assertEquals(marks.X(), result.getWinner());
+        assertEquals(Marks.X, result.getWinner());
     }
     
     @Test
     public void testPrimaryDiagonalVictory() {
-        IBoard board = factory.createNewBoard();
-        set(0, 0, marks.X(), board);
-        set(1, 1, marks.X(), board);
-        set(2, 2, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 2, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 0, Marks.X, board);
+        set(1, 1, Marks.X, board);
+        set(2, 2, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 2, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         
         assertTrue  (result.isGameOver());
-        assertEquals(marks.X(), result.getWinner());
+        assertEquals(Marks.X, result.getWinner());
     }
     
     @Test
     public void testSecondarDiagonalVictory() {
-        IBoard board = factory.createNewBoard();
-        set(0, 2, marks.X(), board);
-        set(1, 1, marks.X(), board);
-        set(2, 0, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 2, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 2, Marks.X, board);
+        set(1, 1, Marks.X, board);
+        set(2, 0, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 2, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         
         assertTrue  (result.isGameOver());
-        assertEquals(marks.X(), result.getWinner());
+        assertEquals(Marks.X, result.getWinner());
     }
     
     @Test
     public void testInProgress() {
-        IBoard board = factory.createNewBoard();
-        set(0, 1, marks.X(), board);
-        set(1, 1, marks.X(), board);
-        set(2, 2, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 2, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 1, Marks.X, board);
+        set(1, 1, Marks.X, board);
+        set(2, 2, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 2, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         
@@ -97,16 +101,16 @@ public class DefaultGamePolicyTest {
     
     @Test
     public void testMatchDrawn() {
-        IBoard board = factory.createNewBoard();
-        set(0, 0, marks.X(), board);
-        set(0, 1, marks.O(), board);
-        set(0, 2, marks.X(), board);
-        set(1, 0, marks.O(), board);
-        set(1, 1, marks.X(), board);
-        set(1, 2, marks.X(), board);
-        set(2, 0, marks.O(), board);
-        set(2, 1, marks.X(), board);
-        set(2, 2, marks.O(), board);
+        IBoard board = new DefaultBoard();
+        set(0, 0, Marks.X, board);
+        set(0, 1, Marks.O, board);
+        set(0, 2, Marks.X, board);
+        set(1, 0, Marks.O, board);
+        set(1, 1, Marks.X, board);
+        set(1, 2, Marks.X, board);
+        set(2, 0, Marks.O, board);
+        set(2, 1, Marks.X, board);
+        set(2, 2, Marks.O, board);
         
         IGameResult result = policy.calculate(board);
         

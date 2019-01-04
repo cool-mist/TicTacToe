@@ -1,15 +1,15 @@
 package me.ayrus.ttt.core.game.impl;
 
-import static java.util.Arrays.asList;
+import static me.ayrus.ttt.core.mark.impl.Marks.O;
+import static me.ayrus.ttt.core.mark.impl.Marks.X;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import me.ayrus.ttt.core.IBoard;
+import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.game.IGame;
-import me.ayrus.ttt.core.game.IGamePolicyFactory;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
-import me.ayrus.ttt.core.player.IPlayerFactory;
-import me.ayrus.ttt.core.player.impl.PlayerFactory;
+import me.ayrus.ttt.core.player.impl.RandomAI;
 
 public class GameTest {
     
@@ -17,20 +17,45 @@ public class GameTest {
     public void testGame() {
         createAndRunDefaultGame(1000);
     }
+    
+    @Test
+    public void testGetBoard_unmodifiable() {
+        IGame  game  = createNewDefaultGame();
+        IBoard board = game.getBoard();
+        
+        verifyBoardUnmodifiable(board);
+    }
+
+    private void verifyBoardUnmodifiable(IBoard board) {
+        for(ISquare square : board.getSquares().values())
+            verifySquareIsUnmodifiable(square);
+    }
+
+    private void verifySquareIsUnmodifiable(ISquare square) {
+        try {
+            square.setMark(X);
+        }catch(IllegalAccessError iae) {
+            return;
+        }
+        
+        fail();
+    }
 
     private void createAndRunDefaultGame(int iter) {
         for(int i = 0; i < iter; ++i) {
-            IMarkFactory       marks    = new MarkFactory();
-            IPlayerFactory     players  = new PlayerFactory();
-            IGamePolicyFactory policies = new GamePolicyFactory();
             
-            IGame game = new Game(asList(
-                                    players.createAIRandom(marks.X()), 
-                                    players.createAIRandom(marks.O()))
-                                 , policies.defaultPolicy());
+            IGame game = createNewDefaultGame();
             
             runGame(game);
         }
+    }
+
+    private IGame createNewDefaultGame() {
+        return new DefaultGame(
+                new RandomAI(X), 
+                new RandomAI(O),
+                new DefaultGamePolicy()
+        );
     }
 
     private void runGame(IGame game) {
@@ -43,5 +68,8 @@ public class GameTest {
             if(numberOfTurns > 10)
                 throw new IllegalStateException("Game did not end!!");
         }
+        
+        if(numberOfTurns < 1) 
+            throw new IllegalStateException("Game did not start!");
     }
 }

@@ -8,13 +8,10 @@ import org.junit.Test;
 
 import me.ayrus.ttt.core.game.IGameResult;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class GameResultTest {
     
-    IMark O = new MarkFactory().O();
-    IMark X = new MarkFactory().X();
-
     @Test
     public void testGameOver() {
         assertFalse(createGameResult(false, false, null).isGameOver());
@@ -34,18 +31,18 @@ public class GameResultTest {
     
     @Test(expected = IllegalAccessError.class)
     public void testGameWinner_gameNotOver() {
-        createGameResult(false, false, O).getWinner();
+        createGameResult(false, false, Marks.O).getWinner();
     }
     
     @Test(expected = IllegalAccessError.class)
     public void testGameWinner_gameDrawn() {
-        createGameResult(true, true, O).getWinner();
+        createGameResult(true, true, Marks.O).getWinner();
     }
     
     @Test
     public void testGameWinner() {
-        assertEquals(O, createGameResult(true, false, O).getWinner());
-        assertEquals(X, createGameResult(true, false, X).getWinner());
+        assertEquals(Marks.O, createGameResult(true, false, Marks.O).getWinner());
+        assertEquals(Marks.X, createGameResult(true, false, Marks.X).getWinner());
     }
     
     private IGameResult createGameResult(boolean b, boolean c, IMark object) {

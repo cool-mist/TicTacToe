@@ -1,6 +1,5 @@
 package me.ayrus.ttt.core.player.impl;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -11,30 +10,15 @@ import me.ayrus.ttt.core.IBoard;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.player.IPlayer;
 
-class RandomAI implements IPlayer{
+public class RandomAI extends AbstractPlayer{
 
-    private final IMark  m_mark;
-    private       IBoard m_board;
-    
-    RandomAI(IMark mark) {
-        m_mark  = mark;
+    public RandomAI(IMark mark) {
+        super(mark);
     }
     
     @Override
-    public void setBoard(IBoard board) {
-        m_board = board;
-    }
-    
-    @Override
-    public IMark getMark() {
-        return m_mark;
-    }
-
-    @Override
-    public IPos nextMove() {
-        IBoard             board          = getBoard();
+    protected IPos doNextMove(IBoard board, IMark mark) {
         Map<IPos, ISquare> state          = board.getSquares();
         List<IPos>         emptyPositions = calculateEmptyPositions(state);
         
@@ -53,11 +37,6 @@ class RandomAI implements IPlayer{
                 .collect(toList());
     }
 
-    private IBoard getBoard() {
-        requireNonNull(m_board, "Set the board for this player with setBoard() before moving");
-        return m_board;
-    }
-
     private int getRandNumberWithin(int size) { 
         // 0(inc) to size(exc)
         return (int) Math.floor(Math.random() * size);
@@ -70,5 +49,4 @@ class RandomAI implements IPlayer{
         
         return false;
     }
-    
 }

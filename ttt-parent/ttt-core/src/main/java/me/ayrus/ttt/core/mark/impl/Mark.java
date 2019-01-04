@@ -17,5 +17,10 @@ class Mark implements IMark{
 
     public int getId() {
         return m_id;
-    } 
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s(%d)", m_symbol, m_id);
+    }
 }

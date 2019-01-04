@@ -7,15 +7,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import me.ayrus.ttt.core.game.IGameResult;
-import me.ayrus.ttt.core.game.IGameResultBuilder;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class GameResultBuilderTest {
 
     IGameResultBuilder builder = new GameResultBuilder();
-    IMarkFactory       factory = new MarkFactory();
 
     @Test
     public void testGameDrawn() {
@@ -34,12 +31,12 @@ public class GameResultBuilderTest {
 
     @Test
     public void testGameOver_X() {
-        verifyGameOver(factory.X());
+        verifyGameOver(Marks.X);
     }
 
     @Test
     public void testGameOver_O() {
-        verifyGameOver(factory.O());
+        verifyGameOver(Marks.O);
     }
     
     private void verifyGameOver(IMark m) {

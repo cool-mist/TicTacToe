@@ -13,6 +13,7 @@ import me.ayrus.ttt.core.IBoard;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.mark.IMark;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class DefaultBoardTest {
 
@@ -92,9 +93,8 @@ public class DefaultBoardTest {
     private void checkEmptySquare(ISquare square, IPos pos) {
         IMark mark = square.getMark();
 
-        assertNotNull(format("at %d:%d ", pos.getRow(), pos.getColumn()),      mark);
-        assertEquals (format("at %d:%d ", pos.getRow(), pos.getColumn()),"$" , mark.getSymbol());
-        assertEquals (format("at %d:%d ", pos.getRow(), pos.getColumn()), 0  , mark.getId());
+        assertNotNull(format("at %d:%d ", pos.getRow(), pos.getColumn()),          mark);
+        assertEquals (format("at %d:%d ", pos.getRow(), pos.getColumn()),Marks.E , mark);
     }
 
 }

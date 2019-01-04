@@ -18,5 +18,9 @@ class Pos implements IPos{
     public int getColumn() {
         return m_column;
     }
-
+    
+    @Override
+    public String toString() {
+        return String.format("%d:%d", m_row, m_column);
+    }
 }

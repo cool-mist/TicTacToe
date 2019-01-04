@@ -7,23 +7,20 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 import me.ayrus.ttt.core.player.IPlayer;
 
 public class ValidationUtilsTest {
 
-    IMarkFactory marks = new MarkFactory();
-    
     @Test
     public void testOK() {
-        List<IPlayer> players = create2Players(marks.X(), marks.O());
+        List<IPlayer> players = create2Players(Marks.X, Marks.O);
         ValidationUtils.validatePlayers(players);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicates() {
-        List<IPlayer> players = create2Players(marks.X(), marks.X());
+        List<IPlayer> players = create2Players(Marks.X, Marks.X);
         ValidationUtils.validatePlayers(players);
     }
     

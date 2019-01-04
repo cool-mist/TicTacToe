@@ -1,7 +1,6 @@
 package me.ayrus.ttt.core.game.impl;
 
 import me.ayrus.ttt.core.game.IGameResult;
-import me.ayrus.ttt.core.game.IGameResultBuilder;
 import me.ayrus.ttt.core.mark.IMark;
 
 class GameResultBuilder implements IGameResultBuilder{

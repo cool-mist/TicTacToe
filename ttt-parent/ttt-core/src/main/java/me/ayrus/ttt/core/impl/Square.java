@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 class Square implements ISquare{
     
@@ -17,7 +17,7 @@ class Square implements ISquare{
     
     Square(IPos pos) {
         m_pos      = pos;
-        m_mark     = new MarkFactory().empty();
+        m_mark     = Marks.E;
         m_occupied = new AtomicBoolean(false);
     }
     

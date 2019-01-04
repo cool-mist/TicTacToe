@@ -1,35 +1,23 @@
 package me.ayrus.ttt.core.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IBoardFactory;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.mark.IMark;
-import me.ayrus.ttt.core.mark.IMarkFactory;
-import me.ayrus.ttt.core.mark.impl.MarkFactory;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
-public class BoardFactoryTest {
-    
-    IBoardFactory factory   = new BoardFactory();
-    IMarkFactory  markFctry = new MarkFactory();
-    
-    @Test
-    public void testInstance() {
-        assertTrue(factory.createNewBoard() instanceof DefaultBoard);
-        assertTrue(factory.createUnmodifiableBoard(factory.createNewBoard())  instanceof DefaultBoard);
-    }
+public class BoardsTest {
     
     @Test
     public void testUnmodifiableBoard() {
-        IBoard board = factory.createNewBoard();
-        IBoard unmod = factory.createUnmodifiableBoard(board);
+        IBoard board = new DefaultBoard();
+        IBoard unmod = Boards.createUnmodifiableBoard(board, DefaultBoard::new);
         
         unmod.getSquares().forEach((p, s) -> {
             checkSquareIsUnmodifiable(s);
@@ -38,12 +26,12 @@ public class BoardFactoryTest {
     
     @Test
     public void testUnmodifiableBoardIsACopy() {
-        IBoard board = factory.createNewBoard();
-        IBoard unmod = factory.createUnmodifiableBoard(board);
+        IBoard board = new DefaultBoard();
+        IBoard unmod = Boards.createUnmodifiableBoard(board, DefaultBoard::new);
         
         checkEqualBoard(board, unmod);
         
-        IMark mark = markFctry.create("X");
+        IMark mark = Marks.X;
         
         for(IPos pos : board.getSquares().keySet()) {
             board.getSquares().get(pos).setMark(mark);
@@ -76,7 +64,7 @@ public class BoardFactoryTest {
 
     private void checkSquareIsUnmodifiable(ISquare s) {
         try {
-            s.setMark(markFctry.create("O"));
+            s.setMark(Marks.O);
         }catch(IllegalAccessError error) {
             // Fine!
             return;

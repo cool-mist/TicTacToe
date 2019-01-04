@@ -1,21 +1,16 @@
 package me.ayrus.ttt.core.impl;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import me.ayrus.ttt.core.IBoard;
-import me.ayrus.ttt.core.IBoardFactory;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.ISquare;
 
-public class BoardFactory implements IBoardFactory{
-    @Override
-    public IBoard createNewBoard() {
-        return new DefaultBoard();
-    }
+public class Boards {
     
-    @Override
-    public IBoard createUnmodifiableBoard(IBoard board) {
-        IBoard             res     = createNewBoard();
+    public static IBoard createUnmodifiableBoard(IBoard board, Supplier<IBoard> constructor) {
+        IBoard             res     = constructor.get();
         Map<IPos, ISquare> squares = res.getSquares();
         for(IPos pos : squares.keySet()) {
             ISquare square             = findSquareAtPos(pos, board);
@@ -27,7 +22,7 @@ public class BoardFactory implements IBoardFactory{
         return res;
     }
 
-    private ISquare findSquareAtPos(IPos pos, IBoard board) {
+    private static ISquare findSquareAtPos(IPos pos, IBoard board) {
         for(IPos p : board.getSquares().keySet()) {
             if(p.getRow() == pos.getRow())
                 if(p.getColumn() == pos.getColumn())
@@ -35,4 +30,5 @@ public class BoardFactory implements IBoardFactory{
         }
         throw new IllegalStateException(String.format("Position %d:%d not found", pos.getRow(), pos.getColumn()));
     }
+
 }
