@@ -1,22 +1,26 @@
 package me.ayrus.ttt.cli.display.impl;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
+import static java.lang.System.lineSeparator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import me.ayrus.ttt.cli.display.IDisplay;
 import me.ayrus.ttt.core.IBoard;
 
 public class CLIDisplay implements IDisplay{
     
-    PrintStream m_ps;
+    Logger m_logger;
     
-    public CLIDisplay(OutputStream os) {
-        m_ps = new PrintStream(os);
+    public CLIDisplay(String name) {
+        m_logger = LoggerFactory.getLogger(name);
     }
     
     @Override
     public void show(IBoard board) {
         StringBuilder builder = new StringBuilder();
+        
+        builder.append(lineSeparator());
         
         appendSeparatingLine(builder);
         appendRow(0, board, builder);
@@ -26,7 +30,7 @@ public class CLIDisplay implements IDisplay{
         appendRow(2, board, builder);
         appendSeparatingLine(builder);
         
-        m_ps.print(builder.toString());
+        m_logger.info(builder.toString());
     }
 
     private void appendRow(int rowNum, IBoard board, StringBuilder builder) {
@@ -36,7 +40,8 @@ public class CLIDisplay implements IDisplay{
         builder.append(getSymbol(rowNum, 1, board));
         builder.append("|");
         builder.append(getSymbol(rowNum, 2, board));
-        builder.append("|\n");
+        builder.append("|");
+        builder.append(lineSeparator());
     }
 
     private String getSymbol(int rowNum, int colNum, IBoard board) {
@@ -44,6 +49,7 @@ public class CLIDisplay implements IDisplay{
     }
 
     private void appendSeparatingLine(StringBuilder builder) {
-        builder.append("._._._.\n");
+        builder.append("._._._.");
+        builder.append(lineSeparator());
     }
 }

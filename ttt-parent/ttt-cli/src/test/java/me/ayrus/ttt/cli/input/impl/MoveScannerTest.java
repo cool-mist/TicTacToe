@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import me.ayrus.ttt.cli.input.IMoveScanner;
 import me.ayrus.ttt.core.IPos;
@@ -40,6 +38,6 @@ public class MoveScannerTest {
     private IMoveScanner createMoveScanner(String str) {
         InputStream is = new ByteArrayInputStream( str.getBytes() );
         
-        return new MoveScanner(is, Mockito.mock(OutputStream.class));
+        return new MoveScanner("abc", is);
     }
 }

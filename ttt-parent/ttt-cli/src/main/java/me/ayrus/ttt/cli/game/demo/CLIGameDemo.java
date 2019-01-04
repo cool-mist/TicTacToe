@@ -15,13 +15,15 @@ public class CLIGameDemo {
     public static void main(String[] args) {
         IGameRunner runner = new GameRunner();
         IGame       game   = new DefaultCLIGame(
-                                    new CLIPlayer(Marks.X, new MoveScanner(System.in, System.out)), 
+                                    new CLIPlayer(Marks.X, new MoveScanner("Player-1",System.in)), 
                                     new RandomAI (Marks.O), 
                                     new DefaultGamePolicy(),
-                                    new CLIDisplay(System.out)
+                                    new CLIDisplay(
+                                           "Board"
+                                    )
                              );
         
         runner.run(game);
     }
-
+    
 }
