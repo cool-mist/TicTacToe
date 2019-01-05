@@ -4,7 +4,11 @@ import me.ayrus.ttt.core.game.IGame;
 import me.ayrus.ttt.core.game.IGameResult;
 import me.ayrus.ttt.core.game.IGameRunner;
 
-public class GameRunner implements IGameRunner{
+public class DefaultGameRunner implements IGameRunner{
+    
+    protected void onGameBegin(IGame game) {}
+    protected void onGameEnd  (IGame game) {}
+    protected void onTurnEnd  (IGame game) {}
 
     @Override
     public IGameResult run(IGame game) {
@@ -12,12 +16,16 @@ public class GameRunner implements IGameRunner{
         int numMoves = 0;
         
         IGameResult result = game.getResult();
+        onGameBegin(game);
         
         while(!result.isGameOver()) {
             result = doNextTurn(game);
+            onTurnEnd(game);
             
             checkMoves(++numMoves);
         }
+        
+        onGameEnd(game);
         
         return result;
     }

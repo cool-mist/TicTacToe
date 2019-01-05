@@ -16,7 +16,7 @@ public class GameRunnerTest {
     
     @Test
     public void testGameRunner() {
-        IGameRunner  runner = new GameRunner();
+        IGameRunner  runner = new DefaultGameRunner();
         
         IGame game = new DefaultGame(
                              new RandomAI(X), 
