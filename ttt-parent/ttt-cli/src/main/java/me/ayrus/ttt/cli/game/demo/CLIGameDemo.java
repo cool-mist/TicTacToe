@@ -1,6 +1,7 @@
 package me.ayrus.ttt.cli.game.demo;
 
 import me.ayrus.ttt.cli.display.impl.CLIDisplay;
+import me.ayrus.ttt.cli.game.DefaultCLIGame;
 import me.ayrus.ttt.cli.input.impl.MoveScanner;
 import me.ayrus.ttt.cli.player.impl.CLIPlayer;
 import me.ayrus.ttt.core.game.IGame;

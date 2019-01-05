@@ -21,11 +21,9 @@ public class MoveScannerTest {
     
     @Test
     public void testNextMove() {
-        IMoveScanner moveScanner = createMoveScanner("12\n98\n1\n01");
+        IMoveScanner moveScanner = createMoveScanner("c2\nb3");
         
         checkNextMove(moveScanner, 1, 2);
-        checkNextMove(moveScanner, 9, 8);
-        checkNextMove(moveScanner, 0, 1);
         checkNextMove(moveScanner, 0, 1);
     }
     

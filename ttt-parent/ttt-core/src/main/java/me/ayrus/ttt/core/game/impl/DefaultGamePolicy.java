@@ -60,14 +60,14 @@ public class DefaultGamePolicy implements IGamePolicy{
             if(board.find(row, col).getMark() != mark)
                 return RESULT_BUILDER.inProgress();
         }
-       LOGGER.info((String.format("Winning with pattern %s", formattedString(pattern))));
+       LOGGER.debug((String.format("Winning with pattern %s", formattedString(pattern))));
         return RESULT_BUILDER.withWinner(mark);
     }
     
     private String formattedString(int[][] pattern) {
         StringBuilder builder = new StringBuilder();
         for(int[] pos : pattern) {
-            builder.append(String.format(" { %d, %d} ", pos[0], pos[1]));
+            builder.append(String.format(" {%d, %d} ", pos[0], pos[1]));
         }
         
         return builder.toString();

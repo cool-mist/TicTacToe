@@ -1,4 +1,4 @@
-package me.ayrus.ttt.cli.game.demo;
+package me.ayrus.ttt.cli.game;
 
 import me.ayrus.ttt.cli.display.IDisplay;
 import me.ayrus.ttt.core.IBoard;
