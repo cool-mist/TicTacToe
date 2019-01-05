@@ -1,100 +1,79 @@
 package me.ayrus.ttt.core.game.impl;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
-
-import java.util.Map.Entry;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import me.ayrus.ttt.core.IBoard;
 import me.ayrus.ttt.core.ISquare;
 import me.ayrus.ttt.core.game.IGamePolicy;
 import me.ayrus.ttt.core.game.IGameResult;
 import me.ayrus.ttt.core.mark.IMark;
+import me.ayrus.ttt.core.mark.impl.Marks;
 
 public class DefaultGamePolicy implements IGamePolicy{
-
-    private IGameResultBuilder builder;
-
-    public DefaultGamePolicy() {
-        builder = new GameResultBuilder();
-    }
-
+    
+    private static final Logger            LOGGER         = LoggerFactory.getLogger(DefaultGamePolicy.class);
+    private static final GameResultBuilder RESULT_BUILDER = new GameResultBuilder(); 
+    private static final int[][][] WINNING = {
+            { {0, 0 }, { 0, 1 }, { 0, 2 } },
+            { {1, 0 }, { 1, 1 }, { 1, 2 } },
+            { {2, 0 }, { 2, 1 }, { 2, 2 } },
+            { {0, 0 }, { 1, 0 }, { 2, 0 } },
+            { {0, 1 }, { 1, 1 }, { 2, 1 } },
+            { {0, 2 }, { 1, 2 }, { 2, 2 } },
+            { {0, 0 }, { 1, 1 }, { 2, 2 } },
+            { {0, 2 }, { 1, 1 }, { 2, 0 } },
+    };
+    
     @Override
     public IGameResult calculate(IBoard board) {
-        int numEmptyCells = board.getSquares().entrySet().stream().map(Entry::getValue).filter(this::notEmpty).collect(toList()).size();
-
-        IGameResult result = matchRows(board)
-                .orElse(matchColumns(board)
-                        .orElse(matchDiagonals(board)
-                                .orElse(builder.inProgress())));
-
-        if(result == builder.inProgress() && numEmptyCells == 0)
-            return builder.drawn();
-
-        return result;
-    }
-
-    private boolean notEmpty(ISquare square) {
-        return square.getMark().getId() == 0;
-    }
-
-    private Optional<IGameResult> matchDiagonals(IBoard board) {
+        boolean emptyCells = board.getSquares().values().stream()
+                                    .filter(this::squareEmpty)
+                                    .count() > 0;
+                                    
+        IGameResult result = null;
+        for(int[][] pattern : WINNING) {
+            result = isWinning(pattern, board);
+            if(result.isGameOver())
+                break;
+        }
         
-        if(markIdAt(1, 1, board) == 0)
-            return empty();
+        if(result.isGameOver())
+            return result;
         
-        if(markIdAt(0, 0, board) == markIdAt(1, 1, board) && 
-                markIdAt(2, 2, board) == markIdAt(1, 1, board)) {
-
-            return of(builder.withWinner(findMark(1, 1, board)));
-        }
-
-        if(markIdAt(0, 2, board) == markIdAt(1, 1, board) && 
-                markIdAt(2, 0, board) == markIdAt(1, 1, board)) {
-
-            return of(builder.withWinner(findMark(1, 1, board)));
-        }
-
-        return empty();
+        if(emptyCells)
+            return RESULT_BUILDER.inProgress();
+        
+        return RESULT_BUILDER.drawn();
     }
 
-    //TODO: Generalize this
-    private Optional<IGameResult> matchRows(IBoard board) {
-        for(int i = 0; i < 3; ++i) { 
-            if(markIdAt(i, 0, board) == 0)
-                continue;
-
-            if(markIdAt(i, 0, board) == markIdAt(i, 1, board) && 
-                    markIdAt(i, 2, board) == markIdAt(i, 1, board)) {
-
-                return of(builder.withWinner(findMark(i, 0, board)));
-            }
-        }
-        return empty();
-    }
-
-    private Optional<IGameResult> matchColumns(IBoard board) {
-        for(int i = 0; i < 3; ++i) { 
-            if(markIdAt(i, 0, board) == 0)
-                continue;
+    private IGameResult isWinning(int[][] pattern, IBoard board) {
+        IMark mark = board.find(pattern[0][0], pattern[0][1]).getMark();
+        if(mark == Marks.E)
+            return RESULT_BUILDER.inProgress();
+        
+        int row, col;
+        for(int i = 1; i < pattern.length; ++i) {
+            row = pattern[i][0];
+            col = pattern[i][1];
             
-            if(markIdAt(0, i, board) == markIdAt(1, i, board) && 
-                    markIdAt(2, i, board) == markIdAt(1, i, board)) {
-
-                return of(builder.withWinner(findMark(1, i, board)));
-            }
+            if(board.find(row, col).getMark() != mark)
+                return RESULT_BUILDER.inProgress();
         }
-        return empty();
+       LOGGER.info((String.format("Winning with pattern %s", formattedString(pattern))));
+        return RESULT_BUILDER.withWinner(mark);
+    }
+    
+    private String formattedString(int[][] pattern) {
+        StringBuilder builder = new StringBuilder();
+        for(int[] pos : pattern) {
+            builder.append(String.format(" { %d, %d} ", pos[0], pos[1]));
+        }
+        
+        return builder.toString();
     }
 
-    private IMark findMark(int i, int j, IBoard board) {
-        return board.find(i, j).getMark();
+    private boolean squareEmpty(ISquare square) {
+        return square.getMark() == Marks.E;
     }
-
-    private int markIdAt(int i, int j, IBoard board) {
-        return findMark(i, j, board).getId();
-    }
-
 }
