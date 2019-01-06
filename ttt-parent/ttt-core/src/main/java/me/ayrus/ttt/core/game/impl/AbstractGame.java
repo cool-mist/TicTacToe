@@ -16,6 +16,7 @@ import me.ayrus.ttt.core.game.IGamePolicy;
 import me.ayrus.ttt.core.game.IGameResult;
 import me.ayrus.ttt.core.impl.Boards;
 import me.ayrus.ttt.core.impl.DefaultBoard;
+import me.ayrus.ttt.core.impl.PosFormatter;
 import me.ayrus.ttt.core.mark.IMark;
 import me.ayrus.ttt.core.player.IPlayer;
 
@@ -73,7 +74,7 @@ abstract class AbstractGame implements IGame{
         
         square.setMark(mark);
         
-        LOGGER.info(format("Player %s(%d) placed their sign on %d:%d", mark.getSymbol(), mark.getId(), pos.getRow(), pos.getColumn()));
+        LOGGER.info(format("Player %s(%d) placed their sign at %s", mark.getSymbol(), mark.getId(), PosFormatter.formatPosition(pos)));
         
         return square;
     }

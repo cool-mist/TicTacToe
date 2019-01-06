@@ -9,6 +9,8 @@
         <module>ttt-core</module>
         <module>ttt-cli</module>
         <module>ttt-demo</module>
+        <module>ttt</module>
+        <module>ttt-ai</module>
     </modules>
 
     <properties>
