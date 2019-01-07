@@ -21,7 +21,7 @@ import me.ayrus.ttt.core.mark.IMark;
 import me.ayrus.ttt.core.player.IPlayer;
 
 abstract class AbstractGame implements IGame{
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractGame.class);
 
     private List<IPlayer> m_players;
@@ -40,10 +40,10 @@ abstract class AbstractGame implements IGame{
         m_unmodifiableBoard = Boards.createUnmodifiableBoard(m_board, DefaultBoard::new);
         m_gamePolicy        = gamePolicy;
         m_gameResult        = m_gamePolicy.calculate(m_board);
-        
+
         initPlayers();
     }
-    
+
     private void initPlayers() {
         m_players.forEach(p -> p.setBoard(m_unmodifiableBoard));
     }
@@ -55,49 +55,65 @@ abstract class AbstractGame implements IGame{
         m_gameResult      = calculateResult();
         m_nextPlayerIndex = nextPlayer();
     }
-    
+
     @Override
     public IGameResult getResult() {
         return m_gameResult;
     }
-    
+
     @Override
     public IBoard getBoard() {
         return m_unmodifiableBoard;
     }
 
-    private ISquare makeMove() { //TODO: Handle exceptions if player performs an illegal move
+    private ISquare makeMove() {
+        int retries = 3;
+
+        for(int i = 0 ; i < retries; ++i) {
+            try {
+                return doMakeMove();
+            }catch(Exception e) {
+                IMark mark =  m_players.get(m_nextPlayerIndex).getMark();
+                LOGGER.debug("Exception occurred while {}({}) moved", mark.getSymbol(), mark.getId(), e);
+                LOGGER.info("Did not understand the move, please try again..");
+            }
+        }
+
+        throw new IllegalStateException("Multiple illegal moves detected");
+
+    }
+    private ISquare doMakeMove() {
         IPlayer currentPlayer = m_players.get(m_nextPlayerIndex);
         IPos    pos           = currentPlayer.nextMove();
         ISquare square        = m_board.find(pos.getRow(), pos.getColumn());
         IMark   mark          = currentPlayer.getMark();
-        
+
         square.setMark(mark);
-        
+
         LOGGER.info(format("Player %s(%d) placed their sign at %s", mark.getSymbol(), mark.getId(), PosFormatter.formatPosition(pos)));
-        
+
         return square;
     }
-    
+
     private int nextPlayer() {
         int size = m_players.size();
         int next = (m_nextPlayerIndex + 1) % size;
-        
+
         return next;
     }
 
     private IGameResult calculateResult() {
         IGameResult result = m_gamePolicy.calculate(m_unmodifiableBoard);
-        
+
         log(result);
-        
+
         return result;
     }
 
     private void log(IGameResult result) {
         if(!result.isGameOver())
             return;
-        
+
         if(result.isGameDrawn())
             LOGGER.info("Game is drawn.");
         else
