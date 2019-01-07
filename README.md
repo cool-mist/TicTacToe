@@ -1,4 +1,5 @@
 ## Tic Tac Toe
+[![Build Status](https://travis-ci.org/cool-mist/TicTacToe.svg?branch=master)](https://travis-ci.org/cool-mist/TicTacToe)  [![codecov](https://codecov.io/gh/cool-mist/TicTacToe/branch/master/graph/badge.svg)](https://codecov.io/gh/cool-mist/TicTacToe)
 - :x:'s and :o:'s 
 - :robot: plays optimally 
 - Java 
