@@ -1,5 +1,5 @@
 language: java
 sudo: false
-script: mvn clean install
+script: "cd ttt-parent; mvn clean install"
 after_success:
           - bash <(curl -s https://codecov.io/bash)
