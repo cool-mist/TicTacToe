@@ -12,11 +12,7 @@ import me.ayrus.ttt.cli.display.impl.CLIDisplay;
 import me.ayrus.ttt.cli.game.impl.DefaultCLIGameRunner;
 import me.ayrus.ttt.cli.input.impl.MoveScanner;
 import me.ayrus.ttt.cli.player.impl.CLIPlayer;
-import me.ayrus.ttt.core.game.IGame;
-import me.ayrus.ttt.core.game.IGamePolicy;
 import me.ayrus.ttt.core.game.IGameRunner;
-import me.ayrus.ttt.core.game.impl.DefaultGame;
-import me.ayrus.ttt.core.game.impl.DefaultGamePolicy;
 import me.ayrus.ttt.core.game.impl.DefaultGameRunner;
 import me.ayrus.ttt.core.mark.IMark;
 import me.ayrus.ttt.core.mark.impl.Marks;
@@ -28,11 +24,34 @@ public class GameConfig {
     String[]    m_args;
     Options     m_options;
     CommandLine m_cmdLine;
+    IPlayer     m_player1;
+    IPlayer     m_player2;
+    IGameRunner m_gameRunner;
 
     public GameConfig(Options options, String[] args) {
         m_args    = args;
         m_options = options;
         m_cmdLine = parseOptions(args);
+        
+        init();
+    }
+
+    private void init() {
+        m_player1     = createPlayer(Marks.X, m_cmdLine.hasOption("x"));
+        m_player2     = createPlayer(Marks.O, m_cmdLine.hasOption("o"));
+        m_gameRunner  = createGameRunner();
+    }
+    
+    public IPlayer getPlayer1() {
+        return m_player1;
+    }
+    
+    public IPlayer getPlayer2() {
+        return m_player2;
+    }
+    
+    public IGameRunner getGameRunner() {
+        return m_gameRunner;
     }
 
     private CommandLine parseOptions(String[] args) {
@@ -54,25 +73,12 @@ public class GameConfig {
         return null;
     }
 
-    IGame createGame() {
-        IPlayer           p1      = createPlayer(Marks.X, m_cmdLine.hasOption("x"));
-        IPlayer           p2      = createPlayer(Marks.O, m_cmdLine.hasOption("o"));
-        IGamePolicy       policy  = new DefaultGamePolicy();
-        IGame             game    = new DefaultGame(p1, p2, policy);
-
-        return game;
-    }
-
-    IGameRunner createGameRunner() {
+    private IGameRunner createGameRunner() {
         if(m_cmdLine.hasOption("x") || m_cmdLine.hasOption("o")) {
             return new DefaultCLIGameRunner(new CLIDisplay("Board"));
         }
         
         return new DefaultGameRunner();
-    }
-
-    public Options getOptions() {
-        return m_options;
     }
 
     private IPlayer createPlayer(IMark mark, boolean isHuman) {

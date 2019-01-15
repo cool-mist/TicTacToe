@@ -4,26 +4,16 @@ import org.apache.commons.cli.Options;
 
 import me.ayrus.ttt.core.game.IGame;
 import me.ayrus.ttt.core.game.IGameRunner;
+import me.ayrus.ttt.core.game.impl.DefaultGame;
+import me.ayrus.ttt.core.game.impl.DefaultGamePolicy;
 
 public class App {
-    
     public static void main(String[] args) {
-        Options     options = createOptions();
+        Options     options = new DefaultOptions();
         GameConfig  config  = new GameConfig(options, args);
-        IGame       game    = config.createGame();
-        IGameRunner runner  = config.createGameRunner();
+        IGame       game    = new DefaultGame(config.getPlayer1(), config.getPlayer2(), new DefaultGamePolicy());
+        IGameRunner runner  = config.getGameRunner();
 
         runner.run(game);
     }
-    
-    private static Options createOptions() {
-        Options opt = new Options();
-
-        opt.addOption("x" , false, "Play as X");
-        opt.addOption("o" , false, "Play as O");
-        opt.addOption("ai", true,  "AI (e)z or (h)ard");
-
-        return opt;
-    }
-
 }
