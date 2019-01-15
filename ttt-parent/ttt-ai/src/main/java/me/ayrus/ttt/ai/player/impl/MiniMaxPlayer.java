@@ -6,7 +6,6 @@ import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.mark.IMark;
 import me.ayrus.ttt.core.player.impl.AbstractPlayer;
 
-//TODO: Add tests for this class
 public class MiniMaxPlayer extends AbstractPlayer{
 
     IMark m_mark;
