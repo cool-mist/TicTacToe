@@ -1,21 +1,18 @@
 package me.ayrus.ttt.ai.minimax;
 
-import me.ayrus.ttt.core.IPos;
+public class Evaluation<Action> {
 
-//TODO: Do not expose implementation details
-public class Evaluation {
-
-    IPos m_pos;
-    int  m_value;
-    int  m_positionsEvaluated;
+    Action m_action;
+    int    m_value;
+    int    m_positionsEvaluated;
     
-    public Evaluation(IPos pos, int value, int positionsEvaluated) {
-        m_pos   = pos;
-        m_value = value;
+    public Evaluation(Action pos, int value, int positionsEvaluated) {
+        m_action             = pos;
+        m_value              = value;
         m_positionsEvaluated = positionsEvaluated;
     }
     
-    public IPos getPos() {
-        return m_pos;
+    public Action getPos() {
+        return m_action;
     }
 }

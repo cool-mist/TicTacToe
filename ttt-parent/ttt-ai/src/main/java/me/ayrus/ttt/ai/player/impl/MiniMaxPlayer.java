@@ -1,6 +1,6 @@
 package me.ayrus.ttt.ai.player.impl;
 
-import me.ayrus.ttt.ai.minimax.MiniMaxTree;
+import me.ayrus.ttt.ai.minimax.impl.TicTacToeEvaluationTree;
 import me.ayrus.ttt.core.IBoard;
 import me.ayrus.ttt.core.IPos;
 import me.ayrus.ttt.core.mark.IMark;
@@ -18,7 +18,7 @@ public class MiniMaxPlayer extends AbstractPlayer{
 
     @Override
     protected IPos doNextMove(IBoard board, IMark mark) {
-        return new MiniMaxTree(board, mark).getEvaluation().getPos();
+        return new TicTacToeEvaluationTree(board, mark).getEvaluation().getPos();
     }
 
 }
